@@ -1,0 +1,30 @@
+{
+  "name": "itelios-codearchive",
+  "version": "1.0.0",
+  "description": "itelios code archive utility",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/itelios/itelios-codearchive.git"
+  },
+  "keywords": [
+    "itelios",
+    "archive",
+    "snippets"
+  ],
+  "author": "nbouti",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/itelios/itelios-codearchive#readme",
+  "dependencies": {
+    "colors": "^1.1.2",
+    "deasync": "^0.1.10",
+    "elasticsearch": "^13.3.1",
+    "fs": "0.0.1-security",
+    "nodegit": "^0.20.2",
+    "path": "^0.12.7",
+    "promise": "^8.0.1"
+  }
+}
