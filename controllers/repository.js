@@ -4,29 +4,58 @@ path = require('path'),
 deasync = require('deasync'),
 colors =  require('colors');
 
+var openOptions = {
+    callbacks: {
+      credentials: function() {
+          return nodegit.Cred.sshKeyNew(
+              'nbouti',
+              'id_rsa.pub',
+              'id_rsa',
+              "opencesam");
+          }
+    }
+  };
+
+var cloneOptions = {
+    fetchOpts: {
+      callbacks: {
+        credentials: function() {
+          return nodegit.Cred.sshKeyNew(
+            'nbouti',
+            'id_rsa.pub',
+            'id_rsa',
+            "opencesam");
+        }
+      }
+    }
+  };
 
 var repoInit = function (localPath){
-            var url = "https://github.com/pazdera/scriptster.git",
-            options = {},
+            var url = "nbouti@bitbucket.org:itelios/itelios-codearchive.git",
             done = false;
             
             nodegit.Repository.open(localPath)
             .then(function(repo) {
-                return (repo.mergeBranches("master", "origin/master"));
+                repository = repo;
+                return repository.fetchAll(openOptions, true);
+            })
+            .then(function() {
+                console.log('Trying to get last modifications on master');
+                return (repository.mergeBranches("master", "origin/master"));
               })
             .then(function(){
-                console.log("Repository openable !".green)
+                console.log("Repository updated and openable !".green)
                 done = true;
             })
             .catch(function(err){
                 console.log('Repository not openable !'.red);
                 console.log(err);
-                nodegit.Clone.clone(url, localPath, options)
+                nodegit.Clone.clone(url, localPath, cloneOptions)
                 .then(function (repo) {
                     console.log(colors.yellow(path.basename(url) + "cloned to " + repo.workdir()));
                     })
                 .catch(function (err) {
-                console.log('Error during NodeGit Clone !'.red);
+                console.log('Error during Git Clone !'.red);
                 console.log(err);
                 })
                 .done(function(){
@@ -36,7 +65,7 @@ var repoInit = function (localPath){
             deasync.loopWhile(function(){
                 return (!done);
             });
-            console.log("Repository initial verification complete !".green);
+            console.log("Repository initialisation over...".yellow);
         };
 
 var getContents = function (localPath){
@@ -44,8 +73,10 @@ var getContents = function (localPath){
     try {
         var reads = fs.readdirSync(localPath);
         for( var key in reads){
+            if (reads[key] != ".git"){
             contents.push(path.join(localPath, reads[key]));
             //contents.push(localPath + '/' + reads[key]);
+            }
         }
     }catch(err){
         console.log('Error cannot get content of your repo ! '.red);
@@ -58,8 +89,9 @@ var getDirectories = function(localPath){
     var contents = getContents(localPath);
     var directories = Array();
     for (var key in contents){
-        if(fs.statSync(contents[key]).isDirectory()){
+        if(fs.statSync(contents[key]).isDirectory() && contents[key] != ".git"){
             directories.push(contents[key]);
+            
         }
     }
     return (directories);
