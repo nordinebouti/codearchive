@@ -40,12 +40,11 @@ var repoInit = function (localPath){
                 return repository.fetchAll(openOptions, true);
             })
             .then(function() {
-                console.log('Trying to get last modifications on master');
+                console.log('Trying to get last modifications on master...'.blue);
                 return (repository.mergeBranches("master", "origin/master"));
               })
             .then(function(){
                 console.log("Repository updated and openable !".green)
-                done = true;
             })
             .catch(function(err){
                 console.log('Repository not openable !'.red);
@@ -57,18 +56,23 @@ var repoInit = function (localPath){
                 .catch(function (err) {
                 console.log('Error during Git Clone !'.red);
                 console.log(err);
+                process.exit(1);
                 })
                 .done(function(){
                     done = true;
                 });
+            })
+            .done(function(){
+                done = true;
             });
             deasync.loopWhile(function(){
                 return (!done);
             });
-            console.log("Repository initialisation over...".yellow);
+            console.log("Repository initialisation over".blue);
         };
 
 var getContents = function (localPath){
+    console.log("Looking for snippets...".blue)
     var contents = Array();
     try {
         var reads = fs.readdirSync(localPath);
@@ -94,6 +98,7 @@ var getDirectories = function(localPath){
             
         }
     }
+    console.log("Done !".green);
     return (directories);
 }
 
