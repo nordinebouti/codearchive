@@ -45,6 +45,7 @@ var repoInit = function (localPath){
               })
             .then(function(){
                 console.log("Repository updated and openable !".green)
+                done = true;
             })
             .catch(function(err){
                 console.log('Repository not openable !'.red);
@@ -62,9 +63,6 @@ var repoInit = function (localPath){
                     done = true;
                 });
             })
-            .done(function(){
-                done = true;
-            });
             deasync.loopWhile(function(){
                 return (!done);
             });
