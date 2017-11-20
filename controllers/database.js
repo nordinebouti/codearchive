@@ -4,6 +4,7 @@ colors = require('colors');
 var _ = require('lodash');
 const uuidv4 = require('uuid/v4');
 */
+
 var saveSnippets =  function(datas){
 
     datas.forEach(function(data) {
@@ -19,7 +20,6 @@ var saveSnippets =  function(datas){
                 console.log(error);
             }else if(response){
                 console.log(colors.green("Saved Snippet ID : " + data.name));
-                //console.log(response);
             }
         });
     });
